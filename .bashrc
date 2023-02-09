@@ -10,14 +10,16 @@ esac
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth:erasedups
 
 # append to the history file, don't overwrite it
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+HISTSIZE=99999
+HISTFILESIZE=99999
+
+PROMPT_COMMAND="history -a; history -c; history -r"
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -29,6 +31,9 @@ shopt -s checkwinsize
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+export PATH=$PATH:/home/amueller/.local/bin/
+eval $(thefuck --alias)
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
@@ -76,8 +81,8 @@ esac
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
 
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
@@ -88,9 +93,10 @@ fi
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
-alias ll='exa -lF'
-alias ls='exa -F'
-alias l='exa -F'
+alias ll='exa -lF --color-scale'
+alias la='exa -Fla --color-scale'
+alias lt='exa -F --long --tree --level=2 --color-scale'
+alias ls='exa -F --color-scale'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -116,6 +122,10 @@ if ! shopt -oq posix; then
   fi
 fi
 
+eval `dircolors /home/amueller/.dir_colors/dircolors`
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
 # Powerline configuration
 if [ -f /usr/share/powerline/bindings/bash/powerline.sh ]; then
   powerline-daemon -q
@@ -130,11 +140,9 @@ source /home/amueller/git/fzf-git.sh/fzf-git.sh
 export FZF_TMUX_OPTS="-w 80% -h 80%"
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
 export FZF_DEFAULT_COMMAND="fd --type file --strip-cwd-prefix --color=always" 
-export FZF_DEFAULT_OPTS="--ansi"
+export FZF_DEFAULT_OPTS="--ansi --border --scroll-off=4"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always {}' --preview-window hidden --bind '?:toggle-preview' --bind shift-up:preview-page-up,shift-down:preview-page-down"
 
 . "$HOME/.cargo/env"
 source /home/amueller/git/alacritty/extra/completions/alacritty.bash
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
