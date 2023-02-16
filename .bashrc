@@ -16,8 +16,8 @@ HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=99999
-HISTFILESIZE=99999
+HISTSIZE=1000
+HISTFILESIZE=1000
 
 export PROMPT_COMMAND="history -a; history -n"
 
